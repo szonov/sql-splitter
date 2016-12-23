@@ -1,0 +1,21 @@
+{
+    "name": "szonov/sql-splitter",
+    "description": "Library for parsing strings with multiple sql queries and split it to single queries",
+    "authors": [
+        {
+            "name": "Sergey Zonov",
+            "email": "sergey@zonov.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.3.1",
+        "szonov/text-source": "^1.0",
+        "szonov/text-parser": "^1.0"
+    },
+    "autoload": {
+        "psr-4" : {
+            "SZonov\\SQL\\Splitter\\"     : "src/"
+        }
+    }
+}
