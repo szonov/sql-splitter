@@ -1,6 +1,7 @@
 {
     "name": "szonov/sql-splitter",
     "description": "Library for parsing strings with multiple sql queries and split it to single queries",
+    "license": "MIT",
     "authors": [
         {
             "name": "Sergey Zonov",
