@@ -2,31 +2,32 @@
 
 namespace SZonov\SQL\Splitter;
 
-class Postgresql extends Parser {
-
-    protected function normalizeQuery($query)
+class Postgresql extends Parser
+{
+    protected function normalizeQuery(string $query): string
     {
         if (preg_match("/^COPY .* FROM STDIN.*/i", $query))
         {
             $query .= ";\n";
-            while (($l=$this->input->getLine()) !== false)
+            $this->readLine();
+            while (!$this->isEndOfInput())
             {
-                $query .= $l;
-                if ($l == "\\.\n") break;
+                $query .= $this->buffer;
+                if ($this->buffer === "\\.\n") break;
+                $this->readLine();
             }
         }
         return $query;
     }
 
-    protected function getNextStopStr()
+    protected function getNextStopStr(): ?string
     {
         $pattern = '@(\'|"|/\*|--|'
             . preg_quote($this->delimiter, '@') . '|(\$\S*\$))@i';
 
-        if ($this->buffer == '')
-            $this->buffer = $this->input->getLine();
+        $this->isBufferEmpty() && $this->readLine();
 
-        while ($this->buffer !== false)
+        while (!$this->isEndOfInput())
         {
             if (preg_match($pattern, $this->buffer, $regs, PREG_OFFSET_CAPTURE)) {
                 $pos = $regs[1][1];
@@ -36,15 +37,17 @@ class Postgresql extends Parser {
                 return $str;
             }
             $this->query .= $this->buffer;
-            $this->buffer = $this->input->getLine();
+            $this->readLine();
         }
-        return false;
+
+        return null;
     }
 
-    protected function processStopStr($str)
+    protected function processStopStr(?string $str): bool
     {
-        $this->query .= $str;
+        $this->query .= $str ?? '';
         $this->getInQuote($str);
+
         return false;
     }
 }

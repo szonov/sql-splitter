@@ -2,7 +2,7 @@
 Library for parsing strings with multiple sql queries and split it to single queries
 
 For now supported:
-* Mysql
+* Mysql (can be used for sqlite)
 * Postgresql
 
 Usage Example :: full (from string)
@@ -46,4 +46,22 @@ foreach ($queries as $query) {
     echo "[" . $query . "]\n";
 }
 
+```
+
+Usage Example :: V2+ syntax
+-------------
+
+```php
+
+include "vendor/autoload.php";
+
+use SZonov\SQL\Splitter\Parser;
+
+//$queries = Parser::fromFileUsingDriver('test.sql', 'mysql')->iterator();
+$queries = Parser::fromFileUsingDriver('test.sql', 'pgsql')->queries();
+
+foreach ($queries as $query) {
+    // make something useful with single query
+    echo "[" . $query . "]\n";
+}
 ```

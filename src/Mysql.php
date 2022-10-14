@@ -2,17 +2,16 @@
 
 namespace SZonov\SQL\Splitter;
 
-class Mysql extends Parser {
-
-    protected function getNextStopStr()
+class Mysql extends Parser
+{
+    protected function getNextStopStr(): ?string
     {
         $pattern = '@(\'|"|/\*|--|'
             . preg_quote($this->delimiter, '@') . '|DELIMITER (\S+))@i';
 
-        if ($this->buffer == '')
-            $this->buffer = $this->input->getLine();
+        $this->isBufferEmpty() && $this->readLine();
 
-        while ($this->buffer !== false)
+        while (!$this->isEndOfInput())
         {
             if (preg_match($pattern, $this->buffer, $regs, PREG_OFFSET_CAPTURE))
             {
@@ -30,12 +29,13 @@ class Mysql extends Parser {
                 return $str;
             }
             $this->query .= $this->buffer;
-            $this->buffer = $this->input->getLine();
+            $this->readLine();
         }
-        return false;
+
+        return null;
     }
 
-    protected function processStopStr($str)
+    protected function processStopStr(?string $str): bool
     {
         return false;
     }
