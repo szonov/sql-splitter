@@ -57,7 +57,7 @@ include "vendor/autoload.php";
 
 use SZonov\SQL\Splitter\Parser;
 
-//$queries = Parser::fromFileUsingDriver('test.sql', 'mysql')->iterator();
+//$queries = Parser::fromFileUsingDriver('test.sql', 'mysql')->queries();
 $queries = Parser::fromFileUsingDriver('test.sql', 'pgsql')->queries();
 
 foreach ($queries as $query) {
